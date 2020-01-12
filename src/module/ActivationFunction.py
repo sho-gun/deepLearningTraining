@@ -14,6 +14,11 @@ def relu(x):
 def identityFunction(x):
     return x
 
+def softmax(x):
+    c = np.max(x)
+    exp_x = np.exp(x - c)
+    return exp_x / np.sum(exp_x)
+
 if __name__ == '__main__':
     x = np.arange(-5.0, 5.0, 0.1)
 
