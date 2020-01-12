@@ -1,42 +1,32 @@
 import numpy as np
+from module.ActivationFunction import sigmoid, identityFunction
 
-def AND(x1, x2):
-    x = np.array([x1, x2])
-    w = np.array([0.5, 0.5])
-    b = -0.7
-    tmp = np.sum(w*x) + b
-    if tmp <= 0:
-        return 0
-    else:
-        return 1
+def initNetwork():
+    network = {}
+    network['W1'] = np.array([ [0.1, 0.3, 0.5], [0.2, 0.4, 0.6] ])
+    network['b1'] = np.array([0.1, 0.2, 0.3])
+    network['W2'] = np.array([ [0.1, 0.4], [0.2, 0.5], [0.3, 0.6] ])
+    network['b2'] = np.array([0.1, 0.2])
+    network['W3'] = np.array([ [0.1, 0.3], [0.2, 0.4] ])
+    network['b3'] = np.array([0.1, 0.2])
 
-def NAND(x1, x2):
-    x = np.array([x1, x2])
-    w = np.array([-0.5, -0.5])
-    b = 0.7
-    tmp = np.sum(w*x) + b
-    if tmp <= 0:
-        return 0
-    else:
-        return 1
+    return network
 
-def OR(x1, x2):
-    x = np.array([x1, x2])
-    w = np.array([0.5, 0.5])
-    b = -0.2
-    tmp = np.sum(w*x) + b
-    if tmp <= 0:
-        return 0
-    else:
-        return 1
+def forward(network, x):
+    W1, W2, W3 = network['W1'], network['W2'], network['W3']
+    b1, b2, b3 = network['b1'], network['b2'], network['b3']
 
-def XOR(x1, x2):
-    s1 = NAND(x1, x2)
-    s2 = OR(x1, x2)
-    return AND(s1, s2)
+    a1 = np.dot(x, W1) + b1
+    z1 = sigmoid(a1)
+    a2 = np.dot(z1, W2) + b2
+    z2 = sigmoid(a2)
+    a3 = np.dot(z2, W3) + b3
+    y = identityFunction(a3)
+
+    return y
 
 if __name__ == '__main__':
-    print(XOR(0, 0))
-    print(XOR(1, 0))
-    print(XOR(0, 1))
-    print(XOR(1, 1))
+    network = initNetwork()
+    x = np.array([1.0, 0.5])
+    y = forward(network, x)
+    print(y)
