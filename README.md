@@ -1,2 +1,2 @@
 # deepLearningTraining
-Implement neural network from scratch for self-training
+Implement neural network from scratch for self-training based on https://github.com/oreilly-japan/deep-learning-from-scratch
