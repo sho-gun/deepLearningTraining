@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pylab as plt
 
-def stepFunction(x):
+def step_function(x):
     y = x > 0
     return y.astype(np.int)
 
@@ -11,7 +11,7 @@ def sigmoid(x):
 def relu(x):
     return np.maximum(0, x)
 
-def identityFunction(x):
+def identity_function(x):
     return x
 
 def softmax(x):
@@ -22,10 +22,10 @@ def softmax(x):
 if __name__ == '__main__':
     x = np.arange(-5.0, 5.0, 0.1)
 
-    y = stepFunction(x)
+    y = step_function(x)
     # y = sigmoid(x)
     # y = relu(x)
-    # y = identityFunction(x)
+    # y = identity_function(x)
 
     plt.plot(x, y)
     plt.ylim(-0.1, 1.1)

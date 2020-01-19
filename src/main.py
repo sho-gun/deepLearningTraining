@@ -4,11 +4,11 @@ import numpy as np
 from module.ActivationFunction import sigmoid, softmax
 from util.mnist import load_mnist
 
-def getData():
-    (xTrain, tTrain), (xTest, tTest) = load_mnist(normalize=True, flatten=True, one_hot_label=False)
-    return xTest, tTest
+def get_data():
+    (x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, flatten=True, one_hot_label=False)
+    return x_test, t_test
 
-def initNetwork():
+def init_network():
     with open(os.path.join('weight', 'sample_weight.pkl'), 'rb') as f:
         network = pickle.load(f)
 
@@ -28,8 +28,8 @@ def predict(network, x):
     return y
 
 if __name__ == '__main__':
-    x, t = getData()
-    network = initNetwork()
+    x, t = get_data()
+    network = init_network()
 
     batch_size = 100
     accuracy_cnt = 0
