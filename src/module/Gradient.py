@@ -1,4 +1,5 @@
 import numpy as np
+import cupy as cp
 
 def numerical_diff(func, x):
     h = 1e-4
@@ -6,9 +7,14 @@ def numerical_diff(func, x):
 
 def numerical_gradient(func, x):
     h = 1e-4
-    grad = np.zeros_like(x)
+    if type(x).__module__ == np.__name__:
+        grad = np.zeros_like(x)
+        np_x = x
+    else:
+        grad = cp.zeros_like(x)
+        np_x = cp.asnumpy(x)
 
-    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
+    it = np.nditer(np_x, flags=['multi_index'], op_flags=['readwrite'])
     while not it.finished:
         idx = it.multi_index
         tmp_val = x[idx]
