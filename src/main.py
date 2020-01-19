@@ -1,43 +1,34 @@
 import os
-import pickle
 import numpy as np
-from module.ActivationFunction import sigmoid, softmax
-from util.mnist import load_mnist
+from module.ActivationFunction import softmax
+from module.LossFunction import cross_entropy_error
+from module.Gradient import numerical_gradient
 
-def get_data():
-    (x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, flatten=True, one_hot_label=False)
-    return x_test, t_test
+class simpleNet:
+    def __init__(self):
+        self.W = np.random.randn(2,3)
 
-def init_network():
-    with open(os.path.join('weight', 'sample_weight.pkl'), 'rb') as f:
-        network = pickle.load(f)
+    def predict(self, x):
+        return np.dot(x, self.W)
 
-    return network
+    def loss(self, x, t):
+        z = self.predict(x)
+        y = softmax(z)
+        loss = cross_entropy_error(y, t)
 
-def predict(network, x):
-    W1, W2, W3 = network['W1'], network['W2'], network['W3']
-    b1, b2, b3 = network['b1'], network['b2'], network['b3']
-
-    a1 = np.dot(x, W1) + b1
-    z1 = sigmoid(a1)
-    a2 = np.dot(z1, W2) + b2
-    z2 = sigmoid(a2)
-    a3 = np.dot(z2, W3) + b3
-    y = softmax(a3)
-
-    return y
+        return loss
 
 if __name__ == '__main__':
-    x, t = get_data()
-    network = init_network()
+    net = simpleNet()
+    print(net.W)
 
-    batch_size = 100
-    accuracy_cnt = 0
+    x = np.array([0.6, 0.9])
+    p = net.predict(x)
+    print(p)
 
-    for i in range(0, len(x), batch_size):
-        x_batch = x[i:i+batch_size]
-        y_batch = predict(network, x_batch)
-        p = np.argmax(y_batch, axis=1)
-        accuracy_cnt += np.sum(p == t[i:i+batch_size])
+    print(np.argmax(p))
+    t = np.array([0, 0, 1])
+    print(net.loss(x, t))
 
-    print('Accuracy:' + str(float(accuracy_cnt) / len(x)))
+    dW = numerical_gradient(lambda W: net.loss(x, t), net.W)
+    print(dW)
