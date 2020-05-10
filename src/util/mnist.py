@@ -27,6 +27,20 @@ img_dim = (1, 28, 28)
 img_size = 784
 
 
+def _pickle_dump(dataset, file, protocol):
+    for key in dataset.keys():
+        dataset[key] = dataset[key].tolist()
+        
+    pickle.dump(dataset, file, protocol)
+    
+def _pickle_load(file):
+    dataset = pickle.load(file)
+    
+    for key in dataset.keys():
+        dataset[key] = np.array(dataset[key])
+        
+    return dataset
+
 def _download(file_name):
     file_path = dataset_dir + "/" + file_name
 
@@ -46,7 +60,7 @@ def _load_label(file_name):
 
     print("Converting " + file_name + " to NumPy Array ...")
     with gzip.open(file_path, 'rb') as f:
-            labels = np.frombuffer(f.read(), np.uint8, offset=8)
+        labels = np.frombuffer(f.read(), np.uint8, offset=8)
     print("Done")
 
     return labels
@@ -56,7 +70,7 @@ def _load_img(file_name):
 
     print("Converting " + file_name + " to NumPy Array ...")
     with gzip.open(file_path, 'rb') as f:
-            data = np.frombuffer(f.read(), np.uint8, offset=16)
+        data = np.frombuffer(f.read(), np.uint8, offset=16)
     data = data.reshape(-1, img_size)
     print("Done")
 
@@ -76,7 +90,8 @@ def init_mnist():
     dataset = _convert_numpy()
     print("Creating pickle file ...")
     with open(save_file, 'wb') as f:
-        pickle.dump(dataset, f, -1)
+        # pickle.dump(dataset, f, -1)
+        _pickle_dump(dataset, f, -1)
     print("Done!")
 
 def _change_one_hot_label(X):
@@ -106,7 +121,8 @@ def load_mnist(normalize=True, flatten=True, one_hot_label=False):
         init_mnist()
 
     with open(save_file, 'rb') as f:
-        dataset = pickle.load(f)
+        # dataset = pickle.load(f)
+        dataset = _pickle_load(f)
 
     if normalize:
         for key in ('train_img', 'test_img'):
